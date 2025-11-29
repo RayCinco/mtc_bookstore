@@ -1,0 +1,9 @@
+INSERT INTO products 
+(id, name, price, original_price, category, rating, image, description, sizes, quantity, created_at, updated_at)
+VALUES
+(2, 'Nursing Shirt Women', 350, NULL, 'Uniform', 5, '/img/uniforms/uniform_nursing_women.png', 'Tailored fit, breathable fabric, designed for comfort and professionalism.', '{"L":3,"M":1,"S":2,"XL":1,"XS":1}', 0, '2025-11-14 12:17:57', '2025-11-14 12:17:57'),
+(3, 'Accountancy Shirt Men', 320, NULL, 'Uniform', 5, '/img/uniforms/uniform_accountancy_men.png', 'Professional business attire, classic fit.', '{"L":3,"M":1,"S":2,"XL":1,"XS":1}', 0, '2025-11-14 12:17:57', '2025-11-14 12:17:57'),
+(4, 'Accountancy Shirt Women', 320, NULL, 'Uniform', 5, '/img/uniforms/uniform_accountancy_women.png', 'Elegant professional design, tailored fit.', '{"L":3,"M":1,"S":2,"XL":1,"XS":1}', 0, '2025-11-14 12:17:57', '2025-11-14 12:17:57'),
+(5, 'Senior High School Shirt', 280, NULL, 'Uniform', 5, '/img/uniforms/uniform_shs_men.png', 'Comfortable daily wear, durable fabric.', '{"L":3,"M":1,"S":2,"XL":1,"XS":1}', 0, '2025-11-14 12:17:57', '2025-11-14 12:17:57'),
+(6, 'Sample Textbook', 100, 120, 'Textbook', 5, '/img/products/sample.png', 'A sample product description.', '{"L":3,"M":5,"S":10}', 50, '2025-11-14 12:59:12', '2025-11-14 12:59:12');
+

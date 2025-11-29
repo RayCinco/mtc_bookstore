@@ -1,0 +1,298 @@
+/* Green Sidebar Override */
+.nav-pills .nav-link,
+.navbar,
+.nav-tabs .nav-link,
+.greensidebar .nav a,
+.greensidebar .nav a i,
+.animation-transition-general,
+.greensidebar .navbar-minimize,
+.off-canvas-sidebar .navbar-minimize,
+.greensidebar .logo a.logo-mini,
+.greensidebar .logo a.logo-normal,
+.off-canvas-sidebar .logo a.logo-mini,
+.off-canvas-sidebar .logo a.logo-normal,
+.tag,
+.tag [data-role="remove"],
+.animation-transition-general,
+.greensidebar .navbar-minimize,
+.off-canvas-sidebar .navbar-minimize,
+.greensidebar .logo a.logo-mini,
+.greensidebar .logo a.logo-normal,
+.off-canvas-sidebar .logo a.logo-mini,
+.off-canvas-sidebar .logo a.logo-normal {
+  -webkit-transition: all 300ms ease 0s;
+  -moz-transition: all 300ms ease 0s;
+  -o-transition: all 300ms ease 0s;
+  -ms-transition: all 300ms ease 0s;
+  transition: all 300ms ease 0s;
+}
+
+.greensidebar,
+.off-canvas-sidebar {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  bottom: 0;
+  width: 260px;
+  left: 0;
+  z-index: 1030;
+  border-right: 1px solid #ddd;
+}
+.greensidebar .sidebar-wrapper,
+.off-canvas-sidebar .sidebar-wrapper {
+  position: relative;
+  height: calc(100vh - 75px);
+  overflow: auto;
+  width: 260px;
+  z-index: 4;
+  padding-bottom: 100px;
+}
+.greensidebar .sidebar-wrapper .dropdown .dropdown-backdrop,
+.off-canvas-sidebar .sidebar-wrapper .dropdown .dropdown-backdrop {
+  display: none !important;
+}
+.greensidebar .sidebar-wrapper .navbar-form,
+.off-canvas-sidebar .sidebar-wrapper .navbar-form {
+  border: none;
+}
+.greensidebar .navbar-minimize,
+.off-canvas-sidebar .navbar-minimize {
+  position: absolute;
+  right: 20px;
+  top: 2px;
+  opacity: 1;
+}
+.greensidebar .logo-tim,
+.off-canvas-sidebar .logo-tim {
+  border-radius: 50%;
+  border: 1px solid #333;
+  display: block;
+  height: 61px;
+  width: 61px;
+  float: left;
+  overflow: hidden;
+}
+.greensidebar .logo-tim img,
+.off-canvas-sidebar .logo-tim img {
+  width: 60px;
+  height: 60px;
+}
+.greensidebar .nav,
+.off-canvas-sidebar .nav {
+  margin-top: 20px;
+  display: block;
+}
+.greensidebar .nav .caret,
+.off-canvas-sidebar .nav .caret {
+  top: 14px;
+  position: absolute;
+  right: 10px;
+}
+.greensidebar .nav li > a + div .nav li > a,
+.off-canvas-sidebar .nav li > a + div .nav li > a {
+  margin-top: 7px;
+}
+.greensidebar .nav li > a,
+.off-canvas-sidebar .nav li > a {
+  margin: 10px 15px 0;
+  color: #ffffff;
+  display: block;
+  text-decoration: none;
+  position: relative;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 10px 8px;
+  line-height: 30px;
+  opacity: 0.7;
+}
+.greensidebar .nav li .nav > li > a,
+.off-canvas-sidebar .nav li .nav > li > a {
+  padding: 5px 8px;
+}
+.greensidebar .nav li.active > a,
+.greensidebar .nav li.active > a > i,
+.off-canvas-sidebar .nav li.active > a,
+.off-canvas-sidebar .nav li.active > a > i {
+  opacity: 1;
+}
+.greensidebar .nav li:hover:not(.active) > a,
+.greensidebar .nav li:focus:not(.active) > a,
+.off-canvas-sidebar .nav li:hover:not(.active) > a,
+.off-canvas-sidebar .nav li:focus:not(.active) > a {
+  opacity: 1;
+}
+.greensidebar .nav i,
+.off-canvas-sidebar .nav i {
+  font-size: 24px;
+  float: left;
+  margin-right: 12px;
+  line-height: 30px;
+  width: 34px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  position: relative;
+}
+.greensidebar .nav p,
+.off-canvas-sidebar .nav p {
+  margin-bottom: 0;
+}
+.greensidebar .nav .collapse .nav,
+.greensidebar .nav .collapsing .nav,
+.off-canvas-sidebar .nav .collapse .nav,
+.off-canvas-sidebar .nav .collapsing .nav {
+  margin-top: 0;
+}
+.greensidebar .sidebar-background,
+.off-canvas-sidebar .sidebar-background {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center center;
+}
+.greensidebar .sidebar-background:after,
+.off-canvas-sidebar .sidebar-background:after {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  content: "";
+  display: block;
+  background: #ffffff;
+  opacity: 1;
+}
+.greensidebar .logo,
+.off-canvas-sidebar .logo {
+  position: relative;
+  padding: 7px 0.7rem;
+  z-index: 4;
+}
+.greensidebar .logo a.logo-mini,
+.off-canvas-sidebar .logo a.logo-mini {
+  opacity: 1;
+  float: left;
+  width: 34px;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 12px;
+}
+.greensidebar .logo a.logo-normal,
+.off-canvas-sidebar .logo a.logo-normal {
+  display: block;
+  opacity: 1;
+  padding: 11px 0 8px;
+  -webkit-transform: translate3d(0px, 0, 0);
+  -moz-transform: translate3d(0px, 0, 0);
+  -o-transform: translate3d(0px, 0, 0);
+  -ms-transform: translate3d(0px, 0, 0);
+  transform: translate3d(0px, 0, 0);
+}
+.greensidebar .logo:after,
+.off-canvas-sidebar .logo:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+  height: 1px;
+  width: calc(100% - 30px);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.greensidebar .logo p,
+.off-canvas-sidebar .logo p {
+  float: left;
+  font-size: 20px;
+  margin: 10px 10px;
+  color: #ffffff;
+  line-height: 20px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.greensidebar .logo .simple-text,
+.off-canvas-sidebar .logo .simple-text {
+  text-transform: uppercase;
+  padding: 0.5rem 0;
+  display: block;
+  white-space: nowrap;
+  font-size: 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 400;
+  line-height: 30px;
+  overflow: hidden;
+}
+.greensidebar .logo-tim,
+.off-canvas-sidebar .logo-tim {
+  border-radius: 50%;
+  border: 1px solid #333;
+  display: block;
+  height: 61px;
+  width: 61px;
+  float: left;
+  overflow: hidden;
+}
+.greensidebar .logo-tim img,
+.off-canvas-sidebar .logo-tim img {
+  width: 60px;
+  height: 60px;
+}
+.greensidebar:before,
+.greensidebar:after,
+.off-canvas-sidebar:before,
+.off-canvas-sidebar:after {
+  display: block;
+  content: "";
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.greensidebar:after,
+.off-canvas-sidebar:after {
+  background: #66615b;
+  background: -webkit-linear-gradient(#66615b 0%, #000 80%);
+  background: -o-linear-gradient(#66615b 0%, #000 80%);
+  background: -moz-linear-gradient(#66615b 0%, #000 80%);
+  background: linear-gradient(#66615b 0%, #000 80%);
+  z-index: 3;
+}
+
+.greensidebar[data-color="green"],
+.greensidebar[data-color="green"]::before,
+.greensidebar[data-color="green"]::after {
+  background: linear-gradient(180deg, #376453 0%, #2f6549 100%) !important;
+}
+
+.greensidebar[data-color="green"]::after {
+  z-index: 3 !important;
+}
+
+/* White text for green sidebar */
+.greensidebar[data-color="green"] .logo .simple-text,
+.greensidebar[data-color="green"] .nav li a,
+.greensidebar[data-color="green"] .nav li a i,
+.greensidebar[data-color="green"] .nav li a p {
+  color: #ffffff !important;
+}
+
+/* Hover effect */
+.greensidebar[data-color="green"] .nav li a:hover,
+.greensidebar[data-color="green"] .nav li a:hover i,
+.greensidebar[data-color="green"] .nav li a:hover p {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Active state */
+.greensidebar[data-color="green"] .nav li.active > a,
+.greensidebar[data-color="green"] .nav li.active > a i,
+.greensidebar[data-color="green"] .nav li.active > a p {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
