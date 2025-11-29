@@ -1,31 +1,40 @@
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+import {
+  FaExclamationCircle,
+  FaSpinner,
+  FaPaperPlane,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaClock,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+} from "react-icons/fa";
+import { useUser } from "../../auth/authHooks/useUser";
+import useCreateContact from "../contactHooks/useCreateContact";
+import Spinner from "../../../components/Spinner";
 // Default store information
 const defaultStores = [
   {
     id: 1,
-    name: "Main Store",
-    address: "123 Fashion Street, New York, USA",
-    email: "info@eshopper.com",
+    name: "Campus Store",
+    address: "Macapagal Blvd, Pasay, Metro Manila, Philippines",
+    email: "mtcbookstore@mtc.edu.ph",
     phone: "+1 (555) 123-4567",
-    hours: "Mon-Sat: 9AM-8PM, Sun: 11AM-6PM",
-  },
-  {
-    id: 2,
-    name: "Downtown Branch",
-    address: "456 Shopping Ave, New York, USA",
-    email: "downtown@eshopper.com",
-    phone: "+1 (555) 987-6543",
-    hours: "Mon-Fri: 10AM-9PM, Weekends: 10AM-7PM",
+    hours: "Mon-Sat: 9AM-5PM",
   },
 ];
 
 const currentStores = defaultStores;
 
 function ContactContent({ onSubmit, stores = null }) {
+  const { isLoading, user } = useUser();
+  const { createContact, isLoading: isContacting } = useCreateContact();
+
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
     subject: "",
     message: "",
   });
@@ -38,19 +47,6 @@ function ContactContent({ onSubmit, stores = null }) {
   // Form validation rules
   function validateField(name, value) {
     switch (name) {
-      case "name":
-        if (!value.trim()) return "Please enter your name";
-        if (value.trim().length < 2)
-          return "Name must be at least 2 characters";
-        return "";
-
-      case "email":
-        if (!value.trim()) return "Please enter your email";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value))
-          return "Please enter a valid email address";
-        return "";
-
       case "subject":
         if (!value.trim()) return "Please enter a subject";
         if (value.trim().length < 5)
@@ -70,7 +66,6 @@ function ContactContent({ onSubmit, stores = null }) {
 
   function handleInputChange(e) {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -97,11 +92,10 @@ function ContactContent({ onSubmit, stores = null }) {
   function validateForm() {
     const newErrors = {};
 
-    Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field]);
-      if (error) {
-        newErrors[field] = error;
-      }
+    // Only validate subject and message; name/email come from authenticated user
+    ["subject", "message"].forEach((field) => {
+      const error = validateField(field, formData[field] || "");
+      if (error) newErrors[field] = error;
     });
 
     setErrors(newErrors);
@@ -109,7 +103,46 @@ function ContactContent({ onSubmit, stores = null }) {
   }
 
   //STAY EMPTY
-  function handleSubmit(e) {}
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // Ensure user exists (we rely on authenticated user for name/email)
+    if (!user) {
+      setSubmitMessage("You must be logged in to send a message.");
+      setIsSubmitted(false);
+      return;
+    }
+
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitMessage("");
+
+    const payload = {
+      name: user.name,
+      email: user.email,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    // Use mutation with callbacks
+    createContact(payload, {
+      onSuccess: (res) => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        setSubmitMessage(
+          "Message sent successfully. We'll get back to you soon."
+        );
+        setFormData({ subject: "", message: "" });
+      },
+      onError: (err) => {
+        setIsSubmitting(false);
+        setIsSubmitted(false);
+        const msg = err?.message || "Failed to send message";
+        setSubmitMessage(msg);
+      },
+    });
+  }
 
   function getInputClass(fieldName) {
     let baseClass = "form-control";
@@ -121,6 +154,9 @@ function ContactContent({ onSubmit, stores = null }) {
     return baseClass;
   }
 
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="container-fluid pt-5">
       <div className="text-center mb-4">
@@ -130,208 +166,239 @@ function ContactContent({ onSubmit, stores = null }) {
       </div>
 
       <div className="row px-xl-5">
-        {/* Contact Form */}
-        <div className="col-lg-7 mb-5">
-          <div className="contact-form">
-            {/* Success/Error Message */}
-            {submitMessage && (
-              <div
-                className={`alert ${
-                  isSubmitted ? "alert-success" : "alert-danger"
-                } mb-4`}
-              >
-                <i
-                  className={`fa ${
-                    isSubmitted ? "fa-check-circle" : "fa-exclamation-triangle"
-                  } mr-2`}
-                ></i>
-                {submitMessage}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} noValidate>
-              {/* Name Field */}
-              <div className="form-group mb-3">
-                <input
-                  type="text"
-                  className={getInputClass("name")}
-                  id="name"
-                  name="name"
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.name && (
-                  <div className="invalid-feedback d-block">
-                    <i className="fa fa-exclamation-circle mr-1"></i>
-                    {errors.name}
-                  </div>
-                )}
-              </div>
-
-              {/* Email Field */}
-              <div className="form-group mb-3">
-                <input
-                  type="email"
-                  className={getInputClass("email")}
-                  id="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.email && (
-                  <div className="invalid-feedback d-block">
-                    <i className="fa fa-exclamation-circle mr-1"></i>
-                    {errors.email}
-                  </div>
-                )}
-              </div>
-
-              {/* Subject Field */}
-              <div className="form-group mb-3">
-                <input
-                  type="text"
-                  className={getInputClass("subject")}
-                  id="subject"
-                  name="subject"
-                  placeholder="Subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.subject && (
-                  <div className="invalid-feedback d-block">
-                    <i className="fa fa-exclamation-circle mr-1"></i>
-                    {errors.subject}
-                  </div>
-                )}
-              </div>
-
-              {/* Message Field */}
-              <div className="form-group mb-4">
-                <textarea
-                  className={getInputClass("message")}
-                  rows="6"
-                  id="message"
-                  name="message"
-                  placeholder="Your Message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                ></textarea>
-                {errors.message && (
-                  <div className="invalid-feedback d-block">
-                    <i className="fa fa-exclamation-circle mr-1"></i>
-                    {errors.message}
-                  </div>
-                )}
-                <small className="form-text text-muted">
-                  {formData.message.length}/500 characters
-                </small>
-              </div>
-
-              {/* Submit Button */}
-              <div>
-                <button
-                  className="btn btn-primary py-2 px-4"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <i className="fa fa-spinner fa-spin mr-2"></i>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fa fa-paper-plane mr-2"></i>
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* Store Information */}
-        <div className="col-lg-5 mb-5">
-          <h5 className="font-weight-semi-bold mb-3">Get In Touch</h5>
-          <p className="mb-4">
-            We're here to help! Whether you have questions about our products,
-            need assistance with an order, or want to provide feedback, don't
-            hesitate to reach out. Our team is ready to assist you.
-          </p>
-
-          {/* Store Locations */}
-          {currentStores.map((store, index) => (
-            <div
-              key={store.id}
-              className={`d-flex flex-column ${
-                index < currentStores.length - 1 ? "mb-4" : ""
-              }`}
-            >
-              <h5 className="font-weight-semi-bold mb-3">{store.name}</h5>
-
-              <div className="mb-2">
-                <i className="fa fa-map-marker-alt text-primary mr-3"></i>
-                <span>{store.address}</span>
-              </div>
-
-              <div className="mb-2">
-                <i className="fa fa-envelope text-primary mr-3"></i>
-                <a href={`mailto:${store.email}`} className="text-dark">
-                  {store.email}
-                </a>
-              </div>
-
-              <div className="mb-2">
-                <i className="fa fa-phone-alt text-primary mr-3"></i>
-                <a href={`tel:${store.phone}`} className="text-dark">
-                  {store.phone}
-                </a>
-              </div>
-
-              {store.hours && (
-                <div className="mb-2">
-                  <i className="fa fa-clock text-primary mr-3"></i>
-                  <span className="text-muted">{store.hours}</span>
-                </div>
-              )}
-            </div>
-          ))}
-
-          {/* Additional Contact Methods */}
-          <div className="mt-4 p-3 bg-light rounded">
-            <h6 className="font-weight-semi-bold mb-3">
-              Other Ways to Reach Us
-            </h6>
-            <div className="d-flex flex-wrap">
-              <a href="#" className="btn btn-outline-primary btn-sm mr-2 mb-2">
-                <i className="fab fa-facebook-f mr-1"></i>
-                Facebook
-              </a>
-              <a href="#" className="btn btn-outline-primary btn-sm mr-2 mb-2">
-                <i className="fab fa-twitter mr-1"></i>
-                Twitter
-              </a>
-              <a href="#" className="btn btn-outline-primary btn-sm mr-2 mb-2">
-                <i className="fab fa-instagram mr-1"></i>
-                Instagram
-              </a>
-              <a href="#" className="btn btn-outline-primary btn-sm mb-2">
-                <i className="fa fa-comments mr-1"></i>
-                Live Chat
-              </a>
-            </div>
-          </div>
-        </div>
+        <ContactForm
+          formData={formData}
+          errors={errors}
+          isSubmitting={isSubmitting}
+          isContacting={isContacting}
+          isSubmitted={isSubmitted}
+          submitMessage={submitMessage}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          getInputClass={getInputClass}
+        />
+        <StoreInformation stores={currentStores} />
       </div>
     </div>
   );
 }
 
 export default ContactContent;
+
+// Contact Form Component
+function ContactForm({
+  formData,
+  errors,
+  isSubmitting,
+  isContacting,
+  isSubmitted,
+  submitMessage,
+  onInputChange,
+  onSubmit,
+  getInputClass,
+}) {
+  return (
+    <div className="col-lg-7 mb-5">
+      <div className="contact-form">
+        {submitMessage && (
+          <SubmitMessage isSubmitted={isSubmitted} message={submitMessage} />
+        )}
+
+        <form onSubmit={onSubmit} noValidate>
+          {/* Name and email are taken from authenticated user, not collected here */}
+
+          <FormField
+            type="text"
+            name="subject"
+            placeholder="Subject"
+            value={formData.subject}
+            error={errors.subject}
+            onChange={onInputChange}
+            getInputClass={getInputClass}
+          />
+
+          <FormField
+            type="textarea"
+            name="message"
+            placeholder="Your Message"
+            value={formData.message}
+            error={errors.message}
+            onChange={onInputChange}
+            getInputClass={getInputClass}
+            rows={6}
+            showCharCount
+          />
+
+          <SubmitButton isSubmitting={isSubmitting || isContacting} />
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Submit Message Component
+function SubmitMessage({ isSubmitted, message }) {
+  const Icon = isSubmitted ? FaCheckCircle : FaExclamationTriangle;
+
+  return (
+    <div
+      className={`alert ${isSubmitted ? "alert-success" : "alert-danger"} mb-4`}
+    >
+      <Icon className="mr-2" />
+      {message}
+    </div>
+  );
+}
+
+// Form Field Component
+function FormField({
+  type,
+  name,
+  placeholder,
+  value,
+  error,
+  onChange,
+  getInputClass,
+  rows,
+  showCharCount,
+}) {
+  return (
+    <div className="form-group mb-3">
+      {type === "textarea" ? (
+        <textarea
+          className={getInputClass(name)}
+          rows={rows}
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required
+        ></textarea>
+      ) : (
+        <input
+          type={type}
+          className={getInputClass(name)}
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required
+        />
+      )}
+      {error && (
+        <div className="invalid-feedback d-block">
+          <FaExclamationCircle className="mr-1" />
+          {error}
+        </div>
+      )}
+      {showCharCount && (
+        <small className="form-text text-muted">
+          {value.length}/500 characters
+        </small>
+      )}
+    </div>
+  );
+}
+
+// Submit Button Component
+function SubmitButton({ isSubmitting }) {
+  return (
+    <div>
+      <button
+        className="btn btn-primary py-2 px-4"
+        type="submit"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <FaSpinner className="fa-spin mr-2" />
+            Sending...
+          </>
+        ) : (
+          <>
+            <FaPaperPlane className="mr-2" />
+            Send Message
+          </>
+        )}
+      </button>
+    </div>
+  );
+}
+
+// Store Information Component
+function StoreInformation({ stores }) {
+  return (
+    <div className="col-lg-5 mb-5">
+      <h5 className="font-weight-semi-bold mb-3">Get In Touch</h5>
+      <p className="mb-4">
+        We're here to help! Whether you have questions about our products, need
+        assistance with an order, or want to provide feedback, don't hesitate to
+        reach out. Our team is ready to assist you.
+      </p>
+
+      {stores.map((store, index) => (
+        <StoreCard
+          key={store.id}
+          store={store}
+          isLast={index === stores.length - 1}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Store Card Component
+function StoreCard({ store, isLast }) {
+  return (
+    <div className={`d-flex flex-column ${!isLast ? "mb-4" : ""}`}>
+      <h5 className="font-weight-semi-bold mb-3">{store.name}</h5>
+
+      <ContactInfo icon="fa-map-marker-alt" text={store.address} type="text" />
+
+      <ContactInfo
+        icon="fa-envelope"
+        text={store.email}
+        type="email"
+        href={`mailto:${store.email}`}
+      />
+
+      <ContactInfo
+        icon="fa-phone-alt"
+        text={store.phone}
+        type="phone"
+        href={`tel:${store.phone}`}
+      />
+
+      {store.hours && (
+        <ContactInfo icon="fa-clock" text={store.hours} type="hours" />
+      )}
+    </div>
+  );
+}
+
+// Contact Info Component
+function ContactInfo({ icon, text, type, href }) {
+  const iconMap = {
+    "fa-map-marker-alt": FaMapMarkerAlt,
+    "fa-envelope": FaEnvelope,
+    "fa-phone-alt": FaPhoneAlt,
+    "fa-clock": FaClock,
+  };
+
+  const IconComponent = iconMap[icon];
+
+  return (
+    <div className="mb-2">
+      {IconComponent && <IconComponent className="text-primary mr-3" />}
+      {href ? (
+        <a href={href} className="text-dark">
+          {text}
+        </a>
+      ) : (
+        <span className={type === "hours" ? "text-muted" : ""}>{text}</span>
+      )}
+    </div>
+  );
+}

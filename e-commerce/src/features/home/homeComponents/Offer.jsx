@@ -1,32 +1,6 @@
 import { Link } from "react-router-dom";
-
+import { defaultOffers } from "../../../utils/constants";
 function Offer({ offers = null }) {
-  // Default offers data
-  const defaultOffers = [
-    {
-      id: 1,
-      discount: "20% off",
-      title: "Spring Collection",
-      subtitle: "the all order",
-      image: "/img/offer-1.png",
-      buttonText: "Shop Now",
-      link: "/shop?collection=spring",
-      textAlign: "text-md-right",
-      bgColor: "bg-secondary",
-    },
-    {
-      id: 2,
-      discount: "20% off",
-      title: "Winter Collection",
-      subtitle: "the all order",
-      image: "/img/offer-2.png",
-      buttonText: "Shop Now",
-      link: "/shop?collection=winter",
-      textAlign: "text-md-left",
-      bgColor: "bg-secondary",
-    },
-  ];
-
   const offersToShow = offers || defaultOffers;
 
   function handleOfferClick(offer) {

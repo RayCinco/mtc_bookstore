@@ -167,13 +167,13 @@ sup {
 }
 
 a {
-  color: #d19c97;
+  color: #34ce57;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #ba6a62;
+  color: #34ce57;
   text-decoration: underline;
 }
 
@@ -2533,8 +2533,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #212529;
-  background-color: #d19c97;
-  border-color: #d19c97;
+  background-color: #34ce57;
+  border-color: #3de66a;
 }
 
 .btn-primary:hover {
@@ -2562,8 +2562,8 @@ fieldset:disabled a.btn {
 .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #c17a74;
-  border-color: #bd726b;
+  background-color: #34ce57;
+  border-color: #3de6bc;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus,
@@ -2815,13 +2815,15 @@ fieldset:disabled a.btn {
 .btn-light:not(:disabled):not(.disabled):active:focus,
 .btn-light:not(:disabled):not(.disabled).active:focus,
 .show > .btn-light.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(222, 222, 223, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(29, 29, 29, 0.5);
 }
 
 .btn-dark {
   color: #fff;
   background-color: #1c1c1c;
   border-color: #1c1c1c;
+  border-radius: 10px;
+  z-index: 1; 
 }
 
 .btn-dark:hover {
@@ -2835,7 +2837,7 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #090909;
   border-color: #030303;
-  box-shadow: 0 0 0 0.2rem rgba(62, 62, 62, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.5);
 }
 
 .btn-dark.disabled,
@@ -2860,24 +2862,24 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #d19c97;
-  border-color: #d19c97;
+  color: #34ce57;
+  border-color: #3de6bc;
 }
 
 .btn-outline-primary:hover {
   color: #212529;
-  background-color: #d19c97;
-  border-color: #d19c97;
+  background-color: #34ce57;
+  border-color: #3de6bc;
 }
 
 .btn-outline-primary:focus,
 .btn-outline-primary.focus {
-  box-shadow: 0 0 0 0.2rem rgba(209, 156, 151, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(108, 214, 144, 0.5);
 }
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: #d19c97;
+  color: #34ce57;
   background-color: transparent;
 }
 
@@ -2885,14 +2887,14 @@ fieldset:disabled a.btn {
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-primary.dropdown-toggle {
   color: #212529;
-  background-color: #d19c97;
-  border-color: #d19c97;
+  background-color: #34ce57;
+  border-color: #3de6bc;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus,
 .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-outline-primary.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(209, 156, 151, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(122, 226, 145, 0.5);
 }
 
 .btn-outline-secondary {
@@ -3162,6 +3164,17 @@ fieldset:disabled a.btn {
 .btn-link.focus {
   text-decoration: underline;
 }
+.btn-group .btn {
+  box-sizing: border-box;
+  padding: 0.375rem 0.75rem; /* same for all buttons */
+  border-width: 1px; /* make sure all borders are consistent */
+}
+
+.btn-group .btn:focus,
+.btn-group .btn:active {
+  outline: none;       /* remove extra focus outline */
+  box-shadow: none;    /* remove extra shadow that can change height */
+}
 
 .btn-link:disabled,
 .btn-link.disabled {
@@ -3192,6 +3205,13 @@ fieldset:disabled a.btn {
 
 .btn-block + .btn-block {
   margin-top: 0.5rem;
+}
+.gender-toggle .btn {
+  box-shadow: none !important;
+}
+
+.gender-toggle .btn:focus {
+  outline: none !important;
 }
 
 input[type="submit"].btn-block,
@@ -3256,7 +3276,9 @@ input[type="button"].btn-block {
 .dropdown-toggle:empty::after {
   margin-left: 0;
 }
-
+.dropdown-menu {
+  z-index: 3100 !important;
+}
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -3886,7 +3908,7 @@ input[type="button"].btn-block {
 .custom-switch
   .custom-control-input:disabled:checked
   ~ .custom-control-label::before {
-  background-color: rgba(209, 156, 151, 0.5);
+  background-color: rgba(82, 207, 120, 0.5);
 }
 
 .custom-select {
@@ -4897,6 +4919,20 @@ input[type="button"].btn-block {
   padding-left: 0;
   list-style: none;
 }
+/* Make all pagination buttons the same size */
+.pagination .page-link {
+  width: 40px;       /* fixed width */
+  text-align: center;
+  padding: 0.5rem 0; /* adjust vertical padding if needed */
+  display: inline-block;
+}
+
+/* Optional: keep active button style consistent */
+.pagination .page-item.active .page-link {
+  background-color: #28a745; /* Bootstrap success green */
+  border-color: #28a745;
+  color: white;
+}
 
 .page-link {
   position: relative;
@@ -4930,8 +4966,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #d19c97;
-  border-color: #d19c97;
+  background-color: #34ec57;
+  border-color: #3de6bc;
 }
 
 .page-item.disabled .page-link {
@@ -6306,16 +6342,19 @@ a.close.disabled {
   position: absolute;
   top: 0;
   bottom: 0;
-  z-index: 1;
+  width: 15%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 15%;
   color: #fff;
   text-align: center;
+  background: none;
+  border: 2px solid transparent;
   opacity: 0.5;
+  z-index: 1000; /* single authoritative stacking */
   transition: opacity 0.15s ease;
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   .carousel-control-prev,
@@ -6323,15 +6362,37 @@ a.close.disabled {
     transition: none;
   }
 }
+.carousel-control-prev,
+.carousel-control-next {
+  color: #fff;               /* existing base color */
+  border: 2px solid transparent; /* make space for a border */
+}
 
+.carousel-control-prev:focus,
+.carousel-control-next:focus {
+  outline: none;
+  border-color: #494949; /* desired focus border color */
+  box-shadow: 0 0 0 0.2rem rgba(209,156,151,0.25);
+}
+.carousel-control-prev,
+.carousel-control-next {
+  opacity: 0.5 !important;      /* same transparency for both */
+  z-index: 1000  !important;     /* make sure both sit above overlays but below modals */
+  filter: none !important;      /* remove any differing filter */
+}
+
+/* Ensure the SVG icons are fully opaque (icons themselves) */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  opacity: 1 !important;
+  filter: none !important;
+}
 .carousel-control-prev:hover,
 .carousel-control-prev:focus,
 .carousel-control-next:hover,
 .carousel-control-next:focus {
-  color: #fff;
-  text-decoration: none;
-  outline: 0;
   opacity: 0.9;
+  outline: 0;
 }
 
 .carousel-control-prev {
@@ -6344,10 +6405,11 @@ a.close.disabled {
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  display: inline-block;
   width: 20px;
   height: 20px;
-  background: no-repeat 50% / 100% 100%;
+  background-size: 100% 100%;
+  opacity: 1;
+  filter: none;
 }
 
 .carousel-control-prev-icon {
@@ -6488,13 +6550,17 @@ a.close.disabled {
   background-color: #d19c97 !important;
 }
 
-a.bg-primary:hover,
-a.bg-primary:focus,
-button.bg-primary:hover,
-button.bg-primary:focus {
-  background-color: #c17a74 !important;
-}
 
+a.bg-primary:focus,
+button.bg-primary:focus {
+  background-color: #ffffff !important;
+  color: #f2e3e2 !important;
+}
+a.bg-primary:hover, button.bg-primary:hover,
+button.bg-primary:hover {
+  background-color: #34ce57 !important;
+  -webkit-text-fill-color: #f2e3e2 !important;
+}
 .bg-secondary {
   background-color: #edf1ff !important;
 }
@@ -9665,9 +9731,11 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #d19c97 !important;
+  color: #34ce57 !important;
 }
-
+.star-primary{
+  color: #1c1c1c !important;
+}
 a.text-primary:hover,
 a.text-primary:focus {
   color: #ba6a62 !important;
@@ -9885,7 +9953,7 @@ a.text-dark:focus {
 
 .navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link.active {
-  color: #d19c97;
+  color: #34ce57;
 }
 
 @media (max-width: 991.98px) {
@@ -9893,10 +9961,11 @@ a.text-dark:focus {
     padding: 5px 0px;
   }
 }
-
 .navbar-vertical.navbar-light .navbar-nav .nav-link {
   padding: 8px 30px;
   border-bottom: 1px solid #edf1ff;
+  position: relative; /* changed from absolute */
+  z-index: 1001;
 }
 
 #header-carousel img {
@@ -9991,4 +10060,13 @@ a.text-dark:focus {
     transform: translateY(-15px);
   }
 }
+.navbar-vertical {
+  position: relative; /* ensure positioned */
+  z-index: 1200;      /* > carousel controls (1000) */
+}
 
+/* Make sure dropdowns are above everything (keep single authoritative rule) */
+.dropdown-menu {
+  position: absolute;
+  z-index: 1300 !important;
+}

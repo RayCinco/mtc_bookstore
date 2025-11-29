@@ -1,7 +1,6 @@
 import HomeCarousel from "../../components/HomeCarousel";
 import Categories from "./homeComponents/Categories";
 import FeaturedProducts from "./homeComponents/FeaturedProducts";
-import Features from "./homeComponents/Features";
 import Offer from "./homeComponents/Offer";
 import Vendors from "./homeComponents/Vendors";
 
@@ -12,7 +11,6 @@ function HomeMenu() {
         <HomeCarousel />
       </div>
       <div>
-        <Features />
         <Categories />
         <Offer />
         <FeaturedProducts />

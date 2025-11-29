@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaAngleDoubleUp } from "react-icons/fa";
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -50,7 +51,7 @@ const BackToTop = () => {
         cursor: "pointer",
       }}
     >
-      <i className="fa fa-angle-double-up"></i>
+      <FaAngleDoubleUp />
     </a>
   );
 };

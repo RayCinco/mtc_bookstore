@@ -1,5 +1,29 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaAngleRight,
+} from "react-icons/fa";
+
+const companyInfo = {
+  name: "Tytana Bookstore",
+  address: "Macapagal Blvd, Pasay, Metro Manila, Philippines",
+  email: "mtcbookstore@mtc.edu.ph",
+  phone: "+0999-1234-5678",
+};
+
+const quickLinks = [
+  { name: "Home", path: "/" },
+  { name: "Our Shop", path: "/shop" },
+];
+
+const customerService = [
+  { name: "Shopping Cart", path: "/cart" },
+  { name: "Reserve", path: "/reserve" },
+  { name: "Contact Us", path: "/contact" },
+];
 
 function Footer() {
   const [newsletterData, setNewsletterData] = useState({
@@ -8,33 +32,6 @@ function Footer() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
-
-  const companyInfo = {
-    name: "EShopper",
-    description:
-      "Your premier destination for quality products and exceptional shopping experience. We offer a wide range of products with fast delivery and excellent customer service.",
-    address: "123 Street, New York, USA",
-    email: "info@eshopper.com",
-    phone: "+012 345 67890",
-  };
-
-  const quickLinks = [
-    { name: "Home", path: "/" },
-    { name: "Our Shop", path: "/shop" },
-    { name: "Shop Detail", path: "/product" },
-    { name: "Shopping Cart", path: "/cart" },
-    { name: "Checkout", path: "/checkout" },
-    { name: "Contact Us", path: "/contact" },
-  ];
-
-  const customerService = [
-    { name: "About Us", path: "/about" },
-    { name: "Privacy Policy", path: "/privacy" },
-    { name: "Terms & Conditions", path: "/terms" },
-    { name: "Return Policy", path: "/returns" },
-    { name: "FAQ", path: "/faq" },
-    { name: "Support", path: "/support" },
-  ];
 
   const handleNewsletterChange = (e) => {
     const { name, value } = e.target;
@@ -75,25 +72,24 @@ function Footer() {
           <Link to="/" className="text-decoration-none">
             <h1 className="mb-4 display-5 font-weight-semi-bold">
               <span className="text-primary font-weight-bold border border-white px-3 mr-1">
-                E
+                Tytana
               </span>
-              {companyInfo.name}
+              Bookstore
             </h1>
           </Link>
-          <p className="mb-4">{companyInfo.description}</p>
           <div className="contact-info">
             <p className="mb-2">
-              <i className="fa fa-map-marker-alt text-primary mr-3"></i>
+              <FaMapMarkerAlt className="text-primary mr-3" />
               {companyInfo.address}
             </p>
             <p className="mb-2">
-              <i className="fa fa-envelope text-primary mr-3"></i>
+              <FaEnvelope className="text-primary mr-3" />
               <a href={`mailto:${companyInfo.email}`} className="text-dark">
                 {companyInfo.email}
               </a>
             </p>
             <p className="mb-0">
-              <i className="fa fa-phone-alt text-primary mr-3"></i>
+              <FaPhoneAlt className="text-primary mr-3" />
               <a href={`tel:${companyInfo.phone}`} className="text-dark">
                 {companyInfo.phone}
               </a>
@@ -114,7 +110,7 @@ function Footer() {
                     className="text-dark mb-2 text-decoration-none"
                     to={link.path}
                   >
-                    <i className="fa fa-angle-right mr-2"></i>
+                    <FaAngleRight className="mr-2" />
                     {link.name}
                   </Link>
                 ))}
@@ -123,9 +119,7 @@ function Footer() {
 
             {/* Customer Service */}
             <div className="col-md-4 mb-5">
-              <h5 className="font-weight-bold text-dark mb-4">
-                Customer Service
-              </h5>
+              <h5 className="font-weight-bold text-dark mb-4">&nbsp;</h5>
               <div className="d-flex flex-column justify-content-start">
                 {customerService.map((link, index) => (
                   <Link
@@ -133,66 +127,11 @@ function Footer() {
                     className="text-dark mb-2 text-decoration-none"
                     to={link.path}
                   >
-                    <i className="fa fa-angle-right mr-2"></i>
+                    <FaAngleRight className="mr-2" />
                     {link.name}
                   </Link>
                 ))}
               </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="col-md-4 mb-5">
-              <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
-              <p className="mb-3">
-                Subscribe to receive updates, access to exclusive deals, and
-                more.
-              </p>
-
-              <form onSubmit={handleNewsletterSubmit}>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    name="name"
-                    className="form-control border-0 py-4"
-                    placeholder="Your Name"
-                    value={newsletterData.name}
-                    onChange={handleNewsletterChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    name="email"
-                    className="form-control border-0 py-4"
-                    placeholder="Your Email"
-                    value={newsletterData.email}
-                    onChange={handleNewsletterChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <button
-                    className="btn btn-primary btn-block border-0 py-3"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Subscribing..." : "Subscribe Now"}
-                  </button>
-                </div>
-              </form>
-
-              {submitMessage && (
-                <div
-                  className={`alert mt-3 ${
-                    submitMessage.includes("Thank you")
-                      ? "alert-success"
-                      : "alert-danger"
-                  }`}
-                >
-                  {submitMessage}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -208,16 +147,9 @@ function Footer() {
             </Link>
             . All Rights Reserved.
             <br className="d-md-none" />
-            Built with React & Bootstrap
+            <br></br>All Company and Institution Names, Logos, and Trademarks
+            are the property of their respective owners.
           </p>
-        </div>
-        <div className="col-md-6 px-xl-0 text-center text-md-right">
-          <img
-            className="img-fluid"
-            src="/img/payments.png"
-            alt="Accepted Payment Methods"
-            style={{ maxHeight: "40px" }}
-          />
         </div>
       </div>
     </div>

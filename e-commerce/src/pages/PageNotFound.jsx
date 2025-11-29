@@ -1,3 +1,4 @@
+import Spinner from "../components/Spinner";
 function PageNotFound() {
   return (
     <div>

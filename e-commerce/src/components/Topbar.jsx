@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
+import Spinner from "./Spinner";
+import { useUser } from "../features/auth/authHooks/useUser";
+import { useImage } from "../hooks/useImage";
 
 function Topbar() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
+  const { isLoading, user } = useUser();
+  const { data: avatarUrl } = useImage(user?.avatar);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -12,63 +17,20 @@ function Topbar() {
     console.log("Searching for:", searchQuery);
   };
 
-  const socialLinks = [
-    { icon: "fab fa-facebook-f", url: "#", label: "Facebook" },
-    { icon: "fab fa-twitter", url: "#", label: "Twitter" },
-    { icon: "fab fa-linkedin-in", url: "#", label: "LinkedIn" },
-    { icon: "fab fa-instagram", url: "#", label: "Instagram" },
-    { icon: "fab fa-youtube", url: "#", label: "YouTube" },
-  ];
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="container-fluid">
-      {/* Top Bar */}
-      <div className="row bg-secondary py-2 px-xl-5">
-        <div className="col-lg-6 d-none d-lg-block">
-          <div className="d-inline-flex align-items-center">
-            <Link className="text-dark" to="/faq">
-              FAQs
-            </Link>
-            <span className="text-muted px-2">|</span>
-            <Link className="text-dark" to="/help">
-              Help
-            </Link>
-            <span className="text-muted px-2">|</span>
-            <Link className="text-dark" to="/support">
-              Support
-            </Link>
-          </div>
-        </div>
-        <div className="col-lg-6 text-center text-lg-right">
-          <div className="d-inline-flex align-items-center">
-            {socialLinks.map((social, index) => (
-              <a
-                key={index}
-                className={`text-dark px-2 ${
-                  index === socialLinks.length - 1 ? "pl-2" : ""
-                }`}
-                href={social.url}
-                aria-label={social.label}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className={social.icon}></i>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Main Header */}
       <div className="row align-items-center py-3 px-xl-5">
         <div className="col-lg-3 d-none d-lg-block">
           <Link to="/" className="text-decoration-none">
-            <h1 className="m-0 display-5 font-weight-semi-bold">
+            <h2 className="m-0 display-5 font-weight-semi-bold">
               <span className="text-primary font-weight-bold border px-3 mr-1">
-                E
+                Tytana
               </span>
-              Shopper
-            </h1>
+              Bookstore
+            </h2>
           </Link>
         </div>
 
@@ -88,7 +50,7 @@ function Topbar() {
                   className="input-group-text bg-transparent text-primary border-0"
                   style={{ cursor: "pointer" }}
                 >
-                  <i className="fa fa-search"></i>
+                  <FaSearch />
                 </button>
               </div>
             </div>
@@ -96,14 +58,34 @@ function Topbar() {
         </div>
 
         <div className="col-lg-3 col-6 text-right">
-          <Link to="/wishlist" className="btn border">
-            <i className="fas fa-heart text-primary"></i>
-            <span className="badge">{wishlistCount}</span>
-          </Link>
           <Link to="/cart" className="btn border ml-2">
-            <i className="fas fa-shopping-cart text-primary"></i>
+            <FaShoppingCart className="text-primary" />
             <span className="badge">{cartCount}</span>
           </Link>
+          <Link
+            to="/account"
+            className="flex items-center gap-2 p-2 border border-gray-300 rounded-lg ml-2"
+          >
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={user?.name || "User"}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.style.display = "none";
+                }}
+              />
+            ) : (
+              <FaUser className="text-primary" />
+            )}
+          </Link>
+          <small className="font-medium ">{user?.name || "Guest"}</small>
         </div>
       </div>
     </div>

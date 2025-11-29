@@ -12,18 +12,18 @@ function HomeCarousel({
   const defaultSlides = [
     {
       id: 1,
-      image: "/img/carousel-1.jpg",
-      subtitle: "10% Off Your First Order",
-      title: "Fashionable Dress",
+      image: "/img/college-textbooks.jpg",
+      subtitle: "College Approved and Recommended",
+      title: "College Textbooks",
       buttonText: "Shop Now",
       buttonLink: "/shop?category=dresses",
       isActive: true,
     },
     {
       id: 2,
-      image: "/img/carousel-2.jpg",
+      image: "/img/sticky-notes.jpg",
       subtitle: "10% Off Your First Order",
-      title: "Reasonable Price",
+      title: "New Arrivals",
       buttonText: "Shop Now",
       buttonLink: "/shop?sale=discounted",
       isActive: false,
@@ -81,9 +81,9 @@ function HomeCarousel({
               className="img-fluid w-100 h-100"
               src={slide.image}
               alt={slide.title}
-              style={{ objectFit: "cover" }}
+              style={{ width: "100%", height: "410px", objectFit: "cover", objectPosition: "center"}}
               onError={(e) => {
-                e.target.src = "/img/carousel-1.jpg"; // Fallback image
+                e.target.src = "/img/college-textbooks.jpg"; // Fallback image
               }}
             />
             <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">

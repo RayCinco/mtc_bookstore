@@ -1,64 +1,73 @@
-import { Link } from "react-router-dom";
-
-// Default categories data
-const categories = [
-  {
-    id: 1,
-    name: "Men's Dresses",
-    productCount: 15,
-    image: "/img/cat-1.jpg",
-    link: "/shop?category=mens-dresses",
-    slug: "mens-dresses",
-  },
-  {
-    id: 2,
-    name: "Women's Dresses",
-    productCount: 23,
-    image: "/img/cat-2.jpg",
-    link: "/shop?category=womens-dresses",
-    slug: "womens-dresses",
-  },
-  {
-    id: 3,
-    name: "Baby's Dresses",
-    productCount: 8,
-    image: "/img/cat-3.jpg",
-    link: "/shop?category=baby-dresses",
-    slug: "baby-dresses",
-  },
-  {
-    id: 4,
-    name: "Accessories",
-    productCount: 31,
-    image: "/img/cat-4.jpg",
-    link: "/shop?category=accessories",
-    slug: "accessories",
-  },
-  {
-    id: 5,
-    name: "Bags",
-    productCount: 19,
-    image: "/img/cat-5.jpg",
-    link: "/shop?category=bags",
-    slug: "bags",
-  },
-  {
-    id: 6,
-    name: "Shoes",
-    productCount: 27,
-    image: "/img/cat-6.jpg",
-    link: "/shop?category=shoes",
-    slug: "shoes",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
+import { categories } from "../../../utils/constants";
+import { useProducts } from "../../product/productHooks/useProducts";
+import Spinner from "../../../components/Spinner";
 function Categories({ showTitle = false, title = "Shop by Category" }) {
+  const navigate = useNavigate();
+  const { products, isLoading } = useProducts();
   function handleCategoryClick(category) {
-    // Analytics tracking
-    console.log("Category clicked:", category.name);
-    // You can add analytics tracking here
-    // gtag('event', 'category_click', { category_name: category.name });
+    // Clear old data
+    sessionStorage.removeItem("startSection");
+    sessionStorage.removeItem("startPage");
+
+    // Assign section and page depending on category clicked
+    switch (category.name) {
+      case "Program Attires":
+        sessionStorage.setItem("startSection", "uniforms");
+        sessionStorage.setItem("startPage", "3");
+        break;
+      case "College Textbooks":
+        sessionStorage.setItem("startSection", "textbooks");
+        sessionStorage.setItem("startPage", "1");
+        break;
+      case "Accessories":
+        sessionStorage.setItem("startSection", "accessories");
+        sessionStorage.setItem("startPage", "1");
+        break;
+      case "School Stationery":
+        sessionStorage.setItem("startSection", "stationery");
+        sessionStorage.setItem("startPage", "1");
+        break;
+      case "Tytana Merchandise":
+        sessionStorage.setItem("startSection", "merchandise");
+        sessionStorage.setItem("startPage", "1");
+        break;
+      case "School Uniforms":
+      default:
+        sessionStorage.setItem("startSection", "uniforms");
+        sessionStorage.setItem("startPage", "1");
+        break;
+    }
+
+    // Redirect to shop
+    navigate("/shop");
   }
 
+  // Normalize product category strings to match the canonical category names
+  function normalizeCategory(cat) {
+    if (!cat || typeof cat !== "string") return cat;
+    const c = cat.toLowerCase();
+    if (c.includes("uniform")) return "School Uniforms";
+    if (c.includes("textbook")) return "College Textbooks";
+    if (c.includes("tytana") || c.includes("merch"))
+      return "Tytana Merchandise";
+    if (c.includes("accessor")) return "Accessories";
+    if (c.includes("supply") || c.includes("stationery"))
+      return "School Supplies";
+    // fallback: title-case the incoming category
+    return cat;
+  }
+
+  const categoryCounts = Array.isArray(products)
+    ? products.reduce((acc, product) => {
+        const key = normalizeCategory(product.category);
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {})
+    : {};
+
+  if (isLoading) return <Spinner />;
   return (
     <div className="container-fluid pt-5">
       {showTitle && (
@@ -70,47 +79,38 @@ function Categories({ showTitle = false, title = "Shop by Category" }) {
       )}
 
       <div className="row px-xl-5 pb-3">
-        {categories.map((category, index) => (
-          <div key={category.id || index} className="col-lg-4 col-md-6 pb-1">
+        {categories.map((category) => (
+          <div key={category.id} className="col-lg-4 col-md-6 pb-1">
             <div
               className="cat-item d-flex flex-column border mb-4"
-              style={{ padding: "30px" }}
+              style={{ padding: "30px", cursor: "pointer", height: "100%" }}
+              onClick={() => handleCategoryClick(category)}
             >
               <p className="text-right text-muted mb-3">
-                {category.productCount}{" "}
-                {category.productCount === 1 ? "Product" : "Products"}
+                {categoryCounts[category.name] || 0} Products
               </p>
 
-              <Link
-                to={category.link}
+              <div
                 className="cat-img position-relative overflow-hidden mb-3 text-decoration-none"
-                onClick={() => handleCategoryClick(category)}
+                style={{ height: "300px" }}
               >
                 <img
-                  className="img-fluid"
+                  className="img-fluid w-100 h-100"
                   src={category.image}
                   alt={category.name}
-                  onError={(e) => {
-                    e.target.src = "/img/cat-1.jpg"; // Fallback image
-                  }}
+                  style={{ objectFit: "cover" }}
                 />
                 <div className="cat-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
                   <div className="cat-hover-content text-center text-white">
-                    <i className="fas fa-eye fa-2x mb-2"></i>
+                    <FaEye className="fa-2x mb-2" />
                     <p className="mb-0">Browse Collection</p>
                   </div>
                 </div>
-              </Link>
+              </div>
 
-              <Link
-                to={category.link}
-                className="text-decoration-none"
-                onClick={() => handleCategoryClick(category)}
-              >
-                <h5 className="font-weight-semi-bold m-0 text-dark category-title">
-                  {category.name}
-                </h5>
-              </Link>
+              <h5 className="font-weight-semi-bold m-0 text-dark category-title text-center">
+                {category.name}
+              </h5>
             </div>
           </div>
         ))}

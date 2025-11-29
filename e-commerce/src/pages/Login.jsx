@@ -1,7 +1,13 @@
+import LoginForm from "../features/auth/LoginForm";
+
 function Login() {
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="container-fluid py-5">
+      <div className="row px-xl-5">
+        <div className="col-lg-8 mx-auto">
+          <LoginForm />
+        </div>
+      </div>
     </div>
   );
 }

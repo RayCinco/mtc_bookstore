@@ -11,7 +11,7 @@ function AppLayout() {
       <Navbar />
       <main>
         <Outlet />
-      </main>
+      </main>             
       <BackToTop />
       <Footer />
     </div>

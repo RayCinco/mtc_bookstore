@@ -30,6 +30,9 @@ const VendorCarousel = ({ vendors, className = "" }) => {
           1200: {
             items: 6,
           },
+          1400: {
+            items: 7,
+          },
         },
       });
 

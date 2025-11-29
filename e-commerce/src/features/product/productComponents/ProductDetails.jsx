@@ -1,211 +1,254 @@
-import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-
-const defaultRelatedProducts = [
-  {
-    id: 1,
-    name: "Colorful Stylish Shirt",
-    price: 123.0,
-    originalPrice: 150.0,
-    image: "/img/product-1.jpg",
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    name: "Modern Casual Wear",
-    price: 89.0,
-    originalPrice: 110.0,
-    image: "/img/product-2.jpg",
-    rating: 4.2,
-  },
-  {
-    id: 3,
-    name: "Premium Designer Top",
-    price: 199.0,
-    originalPrice: 250.0,
-    image: "/img/product-3.jpg",
-    rating: 4.8,
-  },
-  {
-    id: 4,
-    name: "Comfortable Casual Shirt",
-    price: 75.0,
-    originalPrice: 95.0,
-    image: "/img/product-4.jpg",
-    rating: 4.1,
-  },
-  {
-    id: 5,
-    name: "Elegant Evening Wear",
-    price: 299.0,
-    originalPrice: 350.0,
-    image: "/img/product-5.jpg",
-    rating: 4.7,
-  },
-];
+import {
+  formatPrice,
+  getSizeStock,
+  hasSizes,
+  getMaxQuantity,
+  getStockStatus,
+} from "../../../utils/helpers";
+import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
+import StarRating from "../../../components/StarRating";
 
 function ProductDetails({
-  onAddToCart,
-  onViewProduct,
-  sectionTitle = "You May Also Like",
+  productData,
+  currentSizes,
+  selectedSize,
+  setSelectedSize,
+  quantity,
+  handleQuantityChange,
+  handleAddToCart,
+  genderDescription,
+  peLevel,
+  setPeLevel,
+  isReservationMode,
+  toggleReservationMode,
 }) {
-  const carouselRef = useRef(null);
+  const isPeUniform = productData.category === "PE Uniform";
+  const availableSizes = productData.universalSizes || currentSizes;
+  const isSizedProduct = hasSizes(productData.category);
+  const actualStock = getMaxQuantity(productData, selectedSize);
 
-  // Default related products if none provided
+  // Determine max quantity based on mode:
+  // - Cart mode: max = actual stock
+  // - Reservation mode: max = 10
+  const maxQuantity = isReservationMode ? 10 : actualStock;
+  const stockStatus = getStockStatus(productData, selectedSize);
 
-  const productsToShow = defaultRelatedProducts;
-
-  // Initialize Owl Carousel
-  useEffect(() => {
-    if (window.$ && window.$.fn.owlCarousel && carouselRef.current) {
-      const $carousel = $(carouselRef.current);
-
-      $carousel.owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        center: false,
-        dots: false,
-        loop: true,
-        margin: 25,
-        nav: true,
-        navText: [
-          '<i class="fa fa-angle-left" aria-hidden="true"></i>',
-          '<i class="fa fa-angle-right" aria-hidden="true"></i>',
-        ],
-        responsiveClass: true,
-        responsive: {
-          0: {
-            items: 1,
-          },
-          576: {
-            items: 2,
-          },
-          768: {
-            items: 3,
-          },
-          992: {
-            items: 4,
-          },
-        },
-      });
-
-      // Cleanup function
-      return () => {
-        $carousel.trigger("destroy.owl.carousel");
-      };
-    }
-  }, [productsToShow]);
-
-  function handleAddToCart(product) {
-    if (onAddToCart) {
-      onAddToCart(product);
-    } else {
-      console.log("Added to cart:", product);
-      // Default cart functionality
-    }
-  }
-
-  function handleViewProduct(product) {
-    if (onViewProduct) {
-      onViewProduct(product);
-    } else {
-      // Default navigation to product detail page
-      window.location.href = `/product/${product.id}`;
-    }
-  }
-
-  if (!productsToShow || productsToShow.length === 0) {
-    return null;
-  }
+  console.log("ProductDetails - Max Quantity:", maxQuantity);
+  console.log("ProductDetails - Current Quantity:", quantity);
+  console.log("ProductDetails - Selected Size:", selectedSize);
 
   return (
-    <div className="container-fluid py-5">
-      <div className="text-center mb-4">
-        <h2 className="section-title px-5">
-          <span className="px-2">{sectionTitle}</span>
-        </h2>
+    <div className="col-lg-7 pb-5">
+      <h3 className="font-weight-semi-bold">{productData.name}</h3>
+
+      <div className="d-flex mb-3">
+        <StarRating rating={productData.rating} className="mr-2" />
       </div>
 
-      <div className="row px-xl-5">
-        <div className="col">
-          <div ref={carouselRef} className="owl-carousel related-carousel">
-            {productsToShow.map((product) => (
-              <div key={product.id} className="card product-item border-0">
-                <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                  <img
-                    className="img-fluid w-100"
-                    src={product.image}
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.src = "/img/product-1.jpg"; // Fallback image
-                    }}
-                  />
-                  {product.originalPrice &&
-                    product.originalPrice > product.price && (
-                      <div
-                        className="position-absolute"
-                        style={{ top: "10px", right: "10px" }}
-                      >
-                        <span className="badge badge-danger">SALE</span>
-                      </div>
-                    )}
-                </div>
+      <div className="d-flex align-items-center mb-4">
+        <h3 className="font-weight-semi-bold mb-0">
+          {formatPrice(productData.price)}
+        </h3>
+      </div>
 
-                <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                  <h6 className="text-truncate mb-3" title={product.name}>
-                    {product.name}
-                  </h6>
-                  <div className="d-flex justify-content-center">
-                    <h6>${product.price.toFixed(2)}</h6>
-                    {product.originalPrice &&
-                      product.originalPrice > product.price && (
-                        <h6 className="text-muted ml-2">
-                          <del>${product.originalPrice.toFixed(2)}</del>
-                        </h6>
-                      )}
-                  </div>
-                  {product.rating && (
-                    <div className="d-flex justify-content-center mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <i
-                          key={i}
-                          className={`fa fa-star ${
-                            i < Math.floor(product.rating)
-                              ? "text-warning"
-                              : "text-muted"
-                          }`}
-                          style={{ fontSize: "0.8rem" }}
-                        ></i>
-                      ))}
-                      <small className="ml-2 text-muted">
-                        ({product.rating})
-                      </small>
-                    </div>
-                  )}
-                </div>
+      <p className="mb-2">{genderDescription}</p>
 
-                <div className="card-footer d-flex justify-content-between bg-light border">
-                  <button
-                    onClick={() => handleViewProduct(product)}
-                    className="btn btn-sm text-dark p-0 border-0 bg-transparent"
-                    title="View Product Details"
-                  >
-                    <i className="fas fa-eye text-primary mr-1"></i>View Detail
-                  </button>
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="btn btn-sm text-dark p-0 border-0 bg-transparent"
-                    title="Add to Cart"
-                  >
-                    <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
-            ))}
+      {/* PE Uniform toggle */}
+      {isPeUniform && (
+        <div className="mb-3">
+          <div
+            className="btn-group pe-toggle"
+            role="group"
+            aria-label="PE Level"
+          >
+            <button
+              type="button"
+              className={`btn ${
+                peLevel === "SHS" ? "btn-primary" : "btn-outline-secondary"
+              }`}
+              onClick={() => setPeLevel("SHS")}
+            >
+              SHS
+            </button>
+            <button
+              type="button"
+              className={`btn ${
+                peLevel === "College" ? "btn-primary" : "btn-outline-secondary"
+              }`}
+              onClick={() => setPeLevel("College")}
+            >
+              College
+            </button>
           </div>
         </div>
+      )}
+      {/* Sizes */}
+      {availableSizes && availableSizes.length > 0 && (
+        <div className="mb-3">
+          <p className="text-dark font-weight-medium mb-2">Sizes:</p>
+          <div className="d-flex flex-wrap">
+            {availableSizes.map((size, index) => {
+              const sizeStock = getSizeStock(productData.sizes, size);
+              const isOutOfStock = sizeStock === 0;
+
+              return (
+                <div key={index} className="mr-3 mb-2">
+                  <div className="custom-control custom-radio">
+                    <input
+                      type="radio"
+                      className="custom-control-input"
+                      id={`size-${index}`}
+                      name="size"
+                      value={size}
+                      checked={selectedSize === size}
+                      onChange={(e) => setSelectedSize(e.target.value)}
+                      disabled={isOutOfStock}
+                    />
+                    <label
+                      className={`custom-control-label ${
+                        isOutOfStock ? "text-muted" : ""
+                      }`}
+                      htmlFor={`size-${index}`}
+                      style={{
+                        cursor: isOutOfStock ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {size}
+                      <small
+                        className={`ml-2 ${
+                          isOutOfStock ? "text-danger" : "text-success"
+                        }`}
+                      >
+                        {isOutOfStock
+                          ? "(Out of Stock)"
+                          : `(${sizeStock} left)`}
+                      </small>
+                    </label>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Stock Status for non-sized products */}
+      {!isSizedProduct && (
+        <div className="mb-3">
+          <p
+            className={`font-weight-medium ${
+              actualStock === 0 ? "text-danger" : "text-success"
+            }`}
+          >
+            {stockStatus}
+          </p>
+        </div>
+      )}
+
+      {/* Quantity and Add to Cart */}
+      <div className="mb-4 pt-2">
+        <div className="d-flex align-items-center mb-3">
+          <div className="input-group quantity mr-3" style={{ width: "130px" }}>
+            <div className="input-group-prepend">
+              <button
+                className="btn btn-primary btn-minus"
+                type="button"
+                onClick={() => handleQuantityChange("decrement")}
+                disabled={quantity <= 1}
+              >
+                <FaMinus />
+              </button>
+            </div>
+            <input
+              type="text"
+              className="form-control bg-secondary text-center"
+              value={quantity}
+              readOnly
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-primary btn-plus"
+                type="button"
+                onClick={() => handleQuantityChange("increment")}
+                disabled={isReservationMode && quantity >= maxQuantity}
+              >
+                <FaPlus />
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center flex-wrap">
+            <button
+              className={`btn px-3 ${
+                isReservationMode || actualStock === 0
+                  ? "btn-warning"
+                  : "btn-primary"
+              }`}
+              onClick={() => handleAddToCart()}
+              disabled={
+                !isReservationMode &&
+                actualStock !== 0 &&
+                isSizedProduct &&
+                !selectedSize
+              }
+            >
+              <FaShoppingCart className="mr-1" />
+              {actualStock === 0 || isReservationMode
+                ? "Reserve Item"
+                : "Add To Cart"}
+            </button>
+
+            {quantity >= maxQuantity && !isReservationMode && (
+              <small
+                className="text-warning ml-3 ms-3"
+                style={{ fontWeight: 600 }}
+              >
+                {actualStock === 0 ? "Out of stock" : "Max stock reached"}
+              </small>
+            )}
+
+            {isReservationMode && quantity >= maxQuantity && (
+              <small
+                className="text-info ml-3 ms-3"
+                style={{ fontWeight: 600 }}
+              >
+                Max reservation limit (10)
+              </small>
+            )}
+          </div>
+        </div>
+
+        {/* Reservation Option */}
+        {quantity >= actualStock && actualStock > 0 && (
+          <div className="alert alert-info py-2 px-3 mb-0">
+            <div className="d-flex align-items-center justify-content-between">
+              <small>
+                {isReservationMode
+                  ? "🔔 Reservation mode active - item will be reserved for pickup (max 10 units)"
+                  : "Out of stock? Reserve this item for later pickup"}
+              </small>
+              <button
+                className={`btn btn-sm ml-3 ${
+                  isReservationMode
+                    ? "btn-outline-secondary"
+                    : "btn-outline-primary"
+                }`}
+                onClick={toggleReservationMode}
+              >
+                {isReservationMode ? "Cancel Reservation" : "Reserve Instead"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Stock warning */}
+      {actualStock > 0 && actualStock < 5 && !isReservationMode && (
+        <div className="alert alert-warning py-2 px-3 mb-3">
+          <small>
+            Only {actualStock} item{actualStock !== 1 ? "s" : ""} left in stock!
+          </small>
+        </div>
+      )}
     </div>
   );
 }
